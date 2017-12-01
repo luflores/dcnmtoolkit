@@ -21,7 +21,7 @@ Option A:
 
 If you have git installed, clone the repository
 
-    git clone https://github.com/kecorbin/dcnmtoolkit.git
+    git clone https://github.com/luflores/dcnmtoolkit.git
 
 
 
