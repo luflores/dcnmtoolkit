@@ -1,5 +1,6 @@
 __author__ = 'kecorbin'
 
+
 class VXLANBaseObject(object):
     pass
 
@@ -13,7 +14,6 @@ class VNI(VXLANBaseObject):
         self.switchid = None
         self.Vlan = None
         self.vni = None
-
 
     @classmethod
     def from_json(cls, item):
@@ -66,7 +66,6 @@ class VTEP(VXLANBaseObject):
             url = '/rest/topology/switches/vxlan/vteps?detail=true'
         resp = cls._get(session, url)
         return resp
-
 
     def get_vnis(self, session):
         url = '/rest/topology/switches/vxlan?switch-id=%s' % self.switchid

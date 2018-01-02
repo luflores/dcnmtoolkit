@@ -1,5 +1,5 @@
 from dcnmtoolkit import (Session, Org, Partition, Network, VTEP, VNI, Profile, CablePlan,
-                         AutoConfigSettings, ConfigTemplate, Server, SwitchDefinition, PoapTemplate)
+                         AutoConfigSettings, ConfigTemplate, Server, SwitchDetails, PoapTemplate)
 
 import unittest
 import json
@@ -39,7 +39,6 @@ class OfflineTests(unittest.TestCase):
         data = '{"organizationName": "testorg-json"}'
         org = Org._from_json(json.loads(data))
 
-
         self.assertIsInstance(org, Org)
         self.assertEqual(org.get_json(), data)
 
@@ -50,7 +49,8 @@ class OfflineTests(unittest.TestCase):
 
     def test_create_profile(self):
         p = Profile()
-        self.assertIsInstance(p,Profile)
+        self.assertIsInstance(p, Profile)
+
 
 class LiveTestReadOnly(unittest.TestCase):
     def session(self):
@@ -358,17 +358,17 @@ class PoapReadOnlyTests(unittest.TestCase):
 
 
     def test_create_switchdef(self):
-        switchdef = SwitchDefinition()
-        self.assertIsInstance(switchdef, SwitchDefinition)
+        switchdef = SwitchDetails()
+        self.assertIsInstance(switchdef, SwitchDetails)
 
     def test_get_switchdefs(self):
-        defs = SwitchDefinition.get(self.session)
+        defs = SwitchDetails.get(self.session)
         self.assertIsInstance(defs, list)
-        self.assertIsInstance(defs[0], SwitchDefinition)
+        self.assertIsInstance(defs[0], SwitchDetails)
 
 
     def test_get_switchdef_attributes(self):
-        switchdefs = SwitchDefinition.get(self.session)
+        switchdefs = SwitchDetails.get(self.session)
         testdef = switchdefs[0]
 
         for method in dir(testdef):
@@ -377,7 +377,7 @@ class PoapReadOnlyTests(unittest.TestCase):
                 a()
 
     def test_set_switchdef_attributes(self):
-        switchdefs = SwitchDefinition.get(self.session)
+        switchdefs = SwitchDetails.get(self.session)
         testdef = switchdefs[0]
 
         for method in dir(testdef):

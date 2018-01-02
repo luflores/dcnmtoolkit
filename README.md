@@ -5,6 +5,7 @@ The DCNM Toolkit is a set of python libraries that allow basic
 configuration of Cisco Data Center Network Manage. It is intended to allow users to quickly begin using the
 REST API and accelerate the learning curve necessary to begin using the APIC.
 
+Thanks kecorbin@cisco.com for the initial work on this toolkit.
 
 # Installation
 

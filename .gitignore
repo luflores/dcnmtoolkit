@@ -1,0 +1,17 @@
+# Virtualenv
+.Python
+bin
+lib
+include
+*.pyc
+
+# Mac OS X custom attribute files
+.DS_Store
+.idea
+print_output.html
+
+credentials.py
+fabric_data.py
+*.csv
+*.json
+private

@@ -10,25 +10,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .__about__ import ( # noqa
+from .__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
-    __uri__, __version__,
-)
+    __uri__, __version__,)
+from .dcnmsession import Session, AutoConfigSettings
+from .cableplan import CablePlan
+from .autoconfig import Org, Partition, Network, Profile, AutoConfigSettings
+from .vxlan import VTEP, VNI
+from .config import ConfigTemplate
+from .poap import Server, SwitchDetails, TemplateDetails, POAPDefinition
+from .lan_fabric import LANFabric
+import inspect as _inspect
 
 _about_exports = [
     "__author__", "__copyright__", "__email__", "__license__", "__summary__",
     "__title__", "__uri__", "__version__",
 ]
 
-from .dcnmsession import Session, AutoConfigSettings
-from .cableplan import CablePlan
-from .autoconfig import Org, Partition, Network, Profile, AutoConfigSettings
-from .vxlan import VTEP, VNI
-from .config import ConfigTemplate
-from .poap import Server, SwitchDefinition, PoapTemplate
-
-
-import inspect as _inspect
 
 __all__ = _about_exports + sorted(
     name for name, obj in locals().items()

@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from dcnmtoolkit import VTEP
-from dcnmtoolkit import Session
 
 
 try:

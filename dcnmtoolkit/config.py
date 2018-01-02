@@ -1,5 +1,6 @@
 import json
 
+
 class ConfigTemplate(object):
     def __init__(self, attributes=None):
         if attributes:
@@ -17,16 +18,16 @@ class ConfigTemplate(object):
             self.attributes['name'] = None
             self.attributes['fileName'] = None
 
-    def set_templateType(self, val):
+    def set_template_type(self, val):
         self.attributes['templateType'] = val
 
-    def get_templateType(self):
+    def get_template_type(self):
         return self.attributes['templateType']
 
-    def set_supportedPlatforms(self, val):
+    def set_supported_platforms(self, val):
         self.attributes['supportedPlatforms'] = val
 
-    def get_supportedPlatforms(self):
+    def get_supported_platforms(self):
         return self.attributes['supportedPlatforms']
 
     def set_description(self, val):
@@ -41,10 +42,10 @@ class ConfigTemplate(object):
     def get_parameters(self):
         return self.attributes['parameters']
 
-    def set_userDefined(self, val):
+    def set_user_defined(self, val):
         self.attributes['userDefined'] = val
 
-    def get_userDefined(self):
+    def get_user_defined(self):
         return self.attributes['userDefined']
 
     def set_timestamp(self, val):
@@ -59,10 +60,10 @@ class ConfigTemplate(object):
     def get_published(self):
         return self.attributes['published']
 
-    def set_instanceClassId(self, val):
+    def set_instance_class_id(self, val):
         self.attributes['instanceClassId'] = val
 
-    def get_instanceClassId(self):
+    def get_instance_class_id(self):
         return self.attributes['instanceClassId']
 
     def set_name(self, val):
@@ -71,15 +72,14 @@ class ConfigTemplate(object):
     def get_name(self):
         return self.attributes['name']
 
-    def set_fileName(self, val):
+    def set_file_name(self, val):
         self.attributes['fileName'] = val
 
-    def get_fileName(self):
+    def get_file_name(self):
         return self.attributes['fileName']
 
     def get_json(self):
         return json.dumps(self.attributes)
-
 
     @classmethod
     def get(cls, session, name=None):

@@ -8,6 +8,7 @@ class BaseObject(object):
     def get_json(self):
         return json.dumps(self._generate_attributes())
 
+
 class Org(BaseObject):
     def __init__(self, name):
         self.organizationName = name
@@ -20,8 +21,8 @@ class Org(BaseObject):
     # def _get_url_extension(self):
     #     return '/%s' % self.organizationName
 
-
-    def get_url(self):
+    @staticmethod
+    def get_url():
         return '/rest/auto-config/organizations'
 
     def get_json(self):
@@ -36,7 +37,6 @@ class Org(BaseObject):
         obj = cls(item['organizationName'])
         return obj
 
-
     @classmethod
     def get(cls, session):
         url = '/rest/auto-config/organizations?detail=True'
@@ -47,7 +47,6 @@ class Org(BaseObject):
             resp.append(obj)
         return resp
 
-
     def save(self, session):
         resp = session.push_to_dcnm(self.get_url(), self.get_json())
         return resp
@@ -55,6 +54,7 @@ class Org(BaseObject):
     def delete(self, session):
         resp = session.delete(self.get_url() + '/%s' % self.organizationName)
         return resp
+
 
 class Partition(BaseObject):
     def __init__(self, name, parent, profile='vrf-common-evpn'):
@@ -80,11 +80,9 @@ class Partition(BaseObject):
     def get_url(self):
         return '/rest/auto-config/organizations/%s/partitions' % (self.organizationName)
 
-
     def save(self, session):
         resp = session.push_to_dcnm(self.get_url(), self.get_json())
         return resp
-
 
     def delete(self, session):
         resp = session.delete(self.get_url() + '/%s' % (self.partitionName))
@@ -132,7 +130,6 @@ class Network(BaseObject):
               #'$include_vrfSegmentId=50000'
         return arg
 
-
     def set_gateway(self, gw):
         gateway = gw.split('/')[0]
         self.gateway = gateway
@@ -142,8 +139,6 @@ class Network(BaseObject):
     def save(self, session):
         resp = session.push_to_dcnm(self.get_url(), self.get_json())
         return resp
-
-
 
     def _generate_attributes(self):
         attributes = dict()
@@ -175,11 +170,9 @@ class Network(BaseObject):
             resp.append(obj)
         return resp
 
-
     def save(self, session):
         resp = session.push_to_dcnm(self.get_url(), self.get_json())
         return resp
-
 
     def delete(self, session):
         resp = session.delete(self.get_url() + '/segment/%s' % (self.segmentId))
@@ -275,6 +268,7 @@ class Profile(object):
 
     def __str__(self):
         return self.get_profileName()
+
 
 class AutoConfigSettings(object):
     def __init__(self, attributes=None):
@@ -502,7 +496,6 @@ class AutoConfigSettings(object):
 
     def get_json(self):
         return json.dumps(self.attributes)
-
 
     @classmethod
     def get(cls, session):

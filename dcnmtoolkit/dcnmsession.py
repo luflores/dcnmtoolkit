@@ -1,6 +1,7 @@
 import requests
 import json
 import logging
+import urllib3
 from autoconfig import AutoConfigSettings
 
 logging.getLogger(__name__)
@@ -8,7 +9,8 @@ logging.getLogger(__name__)
 
 class Session(object):
 
-    def __init__(self, url, user, passwd):
+    def __init__(self, url, user, passwd, logging_lvl='WARNING', verify=True):
+        logging.basicConfig(level=logging_lvl, format='%(asctime)s %(levelname)s %(message)s')
         self.base_url = url
         self.user = user
         self.passwd = passwd
@@ -17,12 +19,13 @@ class Session(object):
         self.token = None
         self.expiration_time = 1000000
         self.settings = None
+        self.verify = verify
 
     def login(self):
         url = self.base_url + '/rest/logon'
         payload = {'expirationTime': self.expiration_time}
         try:
-            resp = requests.post(url, auth=(self.user, self.passwd), data=json.dumps(payload))
+            resp = requests.post(url, auth=(self.user, self.passwd), data=json.dumps(payload), verify=self.verify)
             if resp.ok:
                 logging.info('Successfully logged into %s' % url)
             else:
@@ -41,25 +44,23 @@ class Session(object):
 
     def push_to_dcnm(self, url, data):
         url = self.base_url + url
-        resp = requests.post(url, headers=self.headers, data=data)
-
+        resp = requests.post(url, headers=self.headers, data=data, verify=self.verify)
         if not resp.ok:
             logging.info('Posting %s to %s' % (data, url))
         return resp
 
     def get(self, url):
         url = self.base_url + url
-        resp = requests.get(url, headers=self.headers)
+        resp = requests.get(url, headers=self.headers, verify=self.verify)
         if resp.ok:
             logging.info('Got %s. Received response: %s' % (url, resp.text))
         else:
             logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp
 
-
     def delete(self, url):
         url = self.base_url + url
-        resp = requests.delete(url, headers=self.headers)
+        resp = requests.delete(url, headers=self.headers, verify=self.verify)
         if resp.ok:
             logging.info('Got %s. Received response: %s' % (url, resp.text))
         else:
@@ -72,7 +73,8 @@ class Session(object):
 
     def save_settings(self, obj):
         if isinstance(obj, AutoConfigSettings):
-            resp = requests.put(self.base_url + '/auto-config/settings', headers=self.headers, data=obj.get_json())
+            resp = requests.put(self.base_url + '/auto-config/settings', headers=self.headers,
+                                data=obj.get_json(), verify=self.verify)
             return resp
         else:
             raise TypeError()

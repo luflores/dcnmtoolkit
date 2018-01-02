@@ -17,12 +17,12 @@ __all__ = [
 
 __title__ = "dcnmtoolkit"
 __summary__ = "Toolkit for Cisco DCNM Fabrics"
-__uri__ = "http://github.com/kecorbin/dcnmtoolkit/"
+__uri__ = "http://github.com/luflores/dcnmtoolkit/"
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 __author__ = "Cisco Systems, Inc."
-__email__ = "kecorbin@cisco.com"
+__email__ = "luflores@cisco.com"
 
 __license__ = "Apache License, Version 2.0"
-__copyright__ = "2015 %s" % __author__
+__copyright__ = "2017 %s" % __author__

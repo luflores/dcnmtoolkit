@@ -32,7 +32,6 @@ orgs = [{'name':'org1', 'partitions': [
     ]
 
 
-
 def create_network(data):
     session = Session(URL, LOGIN, PASSWORD)
     session.login()
@@ -59,7 +58,6 @@ def create_network(data):
             n.segmentId = vni
             n.vlanId = vlan
             n.save(session)
-
 
 
 def delete_network(data):
