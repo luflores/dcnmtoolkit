@@ -51,4 +51,4 @@ def main(url=None, cert=None):
 
 
 if __name__ == "__main__":
-    main(url=URL['99'], cert=CERT['99'])
+    main(url=URL['url2'], cert=CERT['cert2'])

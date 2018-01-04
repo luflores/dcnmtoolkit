@@ -1,4 +1,6 @@
 import json
+
+
 class CablePlan(object):
     def __init__(self, attributes=None):
         if attributes:
@@ -50,7 +52,6 @@ class CablePlan(object):
 
     def get_json(self):
         return json.dumps(self.attributes)
-
 
     @classmethod
     def get(cls, session):

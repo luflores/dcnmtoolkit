@@ -2,7 +2,7 @@ import json
 from credentials import URL, CERT, LOGIN, PASSWORD
 from fabric_data import FABRIC
 from dcnmtoolkit import Session, SwitchDetails, TemplateDetails
-from templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL
+from templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, POAP_LEAF_DCI_TMPL
 import logging
 
 logging.getLogger(__name__)
@@ -25,20 +25,26 @@ def main(url=None, cert=None):
 
     for switch_definitions in fabric_elements:
         for definitions in FABRIC[switch_definitions]:
-            if switch_definitions is 'Spine' or switch_definitions is 'DatacenterCore':
+            if switch_definitions is 'Spine':
                 template_name = 'IPFabric_N9K_Spine_10_2_1_ST_1_TAG'
                 template_params = POAP_SPINE_TMPL['templateDetails'][0]['templateParams']
+            elif switch_definitions is 'DatacenterCore':
+                template_name = 'IPFabric_N9K_Spine_10_2_1_ST_1_TAG_DCI'
+                template_params = POAP_SPINE_DCI_TMPL['templateDetails'][0]['templateParams']
+            elif switch_definitions is 'BorderGateway':
+                template_name = 'IPFabric_N9K_Leaf_10_2_1_ST_1_TAG_DCI'
+                template_params = POAP_LEAF_DCI_TMPL['templateDetails'][0]['templateParams']
             else:
                 template_name = 'IPFabric_N9K_Leaf_10_2_1_ST_1_TAG'
                 template_params = POAP_LEAF_TMPL['templateDetails'][0]['templateParams']
 
             switch_details = SwitchDetails(definitions=definitions)
             template_params = TemplateDetails(template_params=template_params, definitions=definitions)
+
             body = build_poap_def(switch_details.get_details(), template_name, template_params.get_details())
             resp = session.push_to_dcnm(poap_url, json.dumps(body))
-
             logging.info('HTTP POST response %s' % resp)
 
 
 if __name__ == "__main__":
-    main(url=URL['58'], cert=CERT['58'])
+    main(url=URL['url2'], cert=CERT['cert2'])

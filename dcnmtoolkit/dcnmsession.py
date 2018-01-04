@@ -44,9 +44,15 @@ class Session(object):
 
     def push_to_dcnm(self, url, data):
         url = self.base_url + url
+        print url
         resp = requests.post(url, headers=self.headers, data=data, verify=self.verify)
         if not resp.ok:
             logging.info('Posting %s to %s' % (data, url))
+        return resp
+
+    def update_dcnm(self, url, data):
+        url = self.base_url + url
+        resp = requests.put(url, headers=self.headers, data=data, verify=self.verify)
         return resp
 
     def get(self, url):
