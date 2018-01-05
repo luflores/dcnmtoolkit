@@ -40,14 +40,15 @@ def main(url=None, cert=None):
     session = Session(url, LOGIN, PASSWORD, logging_lvl='INFO', verify=cert)
     session.login()
 
-    save_objs_details_to_file(LANFabric.get(session), 'VXLAN_EVPN_Fabric/json/LANFabric.json')
-    save_objs_details_to_file(SwitchDetails.get(session), 'VXLAN_EVPN_Fabric/json/SwitchDefinition.json')
-    save_objs_details_to_file(TemplateDetails.get(session), 'VXLAN_EVPN_Fabric/json/PoapTemplateLeaf.json')
+    save_objs_details_to_file(LANFabric.get(session), 'json/LANFabric.json')
+    save_objs_details_to_file(SwitchDetails.get(session), 'json/SwitchDefinition.json')
+    save_objs_details_to_file(TemplateDetails.get(session), 'json/PoapTemplateLeaf.json')
 
-    fabric_elements = ['BorderLeaf', 'DatacenterCore', 'Spine', 'Leaf', 'BorderGateway']
+    tiers = ['BorderLeaf', 'DatacenterCore', 'Spine', 'Leaf', 'BorderGateway']
 
-    for switch_definitions in fabric_elements:
-        dict_to_csv(FABRIC[switch_definitions], 'VXLAN_EVPN_Fabric/csv/' + switch_definitions + '.csv')
+    for tier in tiers:
+        found_tiers = filter(lambda attribute: attribute['tier'] == tier, FABRIC)
+        dict_to_csv(found_tiers, 'csv/' + tier + '.csv')
 
 
 if __name__ == "__main__":

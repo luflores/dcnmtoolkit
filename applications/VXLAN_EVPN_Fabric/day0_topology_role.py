@@ -13,22 +13,15 @@ def main(url=None, cert=None):
 
     topology = Topology.get(session)
     node_list = topology.__getattribute__('attributes')['nodeList']
-    fabric_tiers = ['BorderLeaf', 'DatacenterCore', 'Spine', 'Leaf', 'BorderGateway']
-    all_switch_definitions = list()
-    for fabric_tier in fabric_tiers:
-        for sw in FABRIC[fabric_tier]:
-            all_switch_definitions.append(sw)
 
-    roles = ['spine', 'leaf', 'border', 'border gateway']
-    for role in roles:
-        for result in filter(lambda attribute: attribute['newRole'] == role, all_switch_definitions):
-            found_switch = filter(lambda attribute: attribute['displayName'] == result['switchName'], node_list)
-            if found_switch:
-                switch_id = found_switch[0]['id']
-                url = '/fm/fmrest/topology/role/%s?newRole=%s' % (switch_id, result['newRole'])
-                # logging.info('%s(%s)--role-->%s' % (result['switchName'], switch_id, result['newRole']))
-                resp = session.update_dcnm(url, None)
-                logging.info('HTTP POST response %s' % resp)
+    for node in FABRIC:
+        found_switch = filter(lambda attribute: attribute['displayName'] == node['switchName'], node_list)
+        if found_switch:
+            switch_id = found_switch[0]['id']
+            url = '/fm/fmrest/topology/role/%s?newRole=%s' % (switch_id, node['role'])
+            resp = session.update_dcnm(url, None)
+            logging.info('HTTP POST response %s' % resp)
+            logging.debug('%s(%s)--role-->%s' % (node['switchName'], switch_id, node['role']))
 
 
 if __name__ == "__main__":
