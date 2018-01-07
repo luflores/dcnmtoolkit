@@ -1,5 +1,5 @@
 import json
-from dcnmtoolkit import Session, SwitchDetails, LANFabric, TemplateDetails
+from dcnmtoolkit import Session, Switch, LANFabric, Template
 from credentials import URL, CERT, LOGIN, PASSWORD
 from fabric_data import FABRIC
 
@@ -10,7 +10,7 @@ def save_objs_details_to_file(objs, filename):
     filename = os.path.join(file_dir, filename)
     details = []
     for obj in objs:
-        details.append(obj.get_details())
+        details.append(obj.attributes)
     with open(filename, 'w') as f:
         json.dump(details, f, indent=4, sort_keys=True)
     return details
@@ -41,8 +41,8 @@ def main(url=None, cert=None):
     session.login()
 
     save_objs_details_to_file(LANFabric.get(session), 'json/LANFabric.json')
-    save_objs_details_to_file(SwitchDetails.get(session), 'json/SwitchDefinition.json')
-    save_objs_details_to_file(TemplateDetails.get(session), 'json/PoapTemplateLeaf.json')
+    save_objs_details_to_file(Switch.get(session), 'json/SwitchDefinition.json')
+    save_objs_details_to_file(Template.get(session), 'json/PoapTemplateLeaf.json')
 
     tiers = ['BorderLeaf', 'DatacenterCore', 'Spine', 'Leaf', 'BorderGateway']
 

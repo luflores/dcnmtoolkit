@@ -18,7 +18,7 @@ from .cableplan import CablePlan
 from .autoconfig import Org, Partition, Network, Profile, AutoConfigSettings
 from .vxlan import VTEP, VNI
 from .config import ConfigTemplate
-from .poap import Server, SwitchDetails, TemplateDetails, POAPDefinition
+from .poap import Server, Switch, Template, POAPDefinition
 from .lan_fabric import LANFabric
 from .topology import Topology
 import inspect as _inspect

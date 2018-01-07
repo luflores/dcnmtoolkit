@@ -1,5 +1,5 @@
 from dcnmtoolkit import (Session, Org, Partition, Network, VTEP, VNI, Profile, CablePlan,
-                         AutoConfigSettings, ConfigTemplate, Server, SwitchDetails, PoapTemplate)
+                         AutoConfigSettings, ConfigTemplate, Server, Switch, PoapTemplate)
 
 import unittest
 import json
@@ -358,17 +358,17 @@ class PoapReadOnlyTests(unittest.TestCase):
 
 
     def test_create_switchdef(self):
-        switchdef = SwitchDetails()
-        self.assertIsInstance(switchdef, SwitchDetails)
+        switchdef = Switch()
+        self.assertIsInstance(switchdef, Switch)
 
     def test_get_switchdefs(self):
-        defs = SwitchDetails.get(self.session)
+        defs = Switch.get(self.session)
         self.assertIsInstance(defs, list)
-        self.assertIsInstance(defs[0], SwitchDetails)
+        self.assertIsInstance(defs[0], Switch)
 
 
     def test_get_switchdef_attributes(self):
-        switchdefs = SwitchDetails.get(self.session)
+        switchdefs = Switch.get(self.session)
         testdef = switchdefs[0]
 
         for method in dir(testdef):
@@ -377,7 +377,7 @@ class PoapReadOnlyTests(unittest.TestCase):
                 a()
 
     def test_set_switchdef_attributes(self):
-        switchdefs = SwitchDetails.get(self.session)
+        switchdefs = Switch.get(self.session)
         testdef = switchdefs[0]
 
         for method in dir(testdef):
