@@ -42,15 +42,14 @@ class Session(object):
         resp = self.get(url)
         return resp.json()['Dcnm-Version']
 
-    def push_to_dcnm(self, url, data):
+    def post(self, url, data):
         url = self.base_url + url
-        print url
         resp = requests.post(url, headers=self.headers, data=data, verify=self.verify)
         if not resp.ok:
             logging.info('Posting %s to %s' % (data, url))
         return resp
 
-    def update_dcnm(self, url, data):
+    def put(self, url, data):
         url = self.base_url + url
         resp = requests.put(url, headers=self.headers, data=data, verify=self.verify)
         return resp
@@ -64,9 +63,9 @@ class Session(object):
             logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp
 
-    def delete(self, url):
+    def delete(self, url, data=None):
         url = self.base_url + url
-        resp = requests.delete(url, headers=self.headers, verify=self.verify)
+        resp = requests.delete(url, headers=self.headers, data=data, verify=self.verify)
         if resp.ok:
             logging.info('Got %s. Received response: %s' % (url, resp.text))
         else:

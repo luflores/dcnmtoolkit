@@ -1,18 +1,11 @@
 import json
 from credentials import URL, CERT, LOGIN, PASSWORD
 from fabric_data import FABRIC
-from dcnmtoolkit import Session, Switch, Template
+from dcnmtoolkit import Session, POAPDefinition
 from templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, POAP_LEAF_DCI_TMPL
 import logging
 
 logging.getLogger(__name__)
-
-
-def build_poap_def(switch_details, template_name, template_params):
-    poap_definition = {'switchDetails': [switch_details],
-                       'templateDetails': [{'templateName': template_name,
-                                            'templateParams': template_params}]}
-    return poap_definition
 
 
 def main(url=None, cert=None):
@@ -38,14 +31,10 @@ def main(url=None, cert=None):
             params = POAP_LEAF_TMPL['templateDetails'][0]['templateParams']
 
         if params and template_name:
-            switch = Switch()
-            template = Template()
-            switch.details = node
-            template.params = (node, params)
-
-            body = build_poap_def(switch.details, template_name, template.params)
-            resp = session.push_to_dcnm(poap_url, json.dumps(body))
+            poap = POAPDefinition(attributes=node, params=params, template_name=template_name)
+            resp = session.post(poap_url, json.dumps(poap.definition))
             logging.info('HTTP POST response %s' % resp)
+            # print json.dumps(poap.definition, indent=4)
 
 
 if __name__ == "__main__":

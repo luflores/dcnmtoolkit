@@ -48,7 +48,7 @@ class Org(BaseObject):
         return resp
 
     def save(self, session):
-        resp = session.push_to_dcnm(self.get_url(), self.get_json())
+        resp = session.post(self.get_url(), self.get_json())
         return resp
 
     def delete(self, session):
@@ -81,7 +81,7 @@ class Partition(BaseObject):
         return '/rest/auto-config/organizations/%s/partitions' % (self.organizationName)
 
     def save(self, session):
-        resp = session.push_to_dcnm(self.get_url(), self.get_json())
+        resp = session.post(self.get_url(), self.get_json())
         return resp
 
     def delete(self, session):
@@ -137,7 +137,7 @@ class Network(BaseObject):
         self.netmasklength = mask
 
     def save(self, session):
-        resp = session.push_to_dcnm(self.get_url(), self.get_json())
+        resp = session.post(self.get_url(), self.get_json())
         return resp
 
     def _generate_attributes(self):
@@ -171,7 +171,7 @@ class Network(BaseObject):
         return resp
 
     def save(self, session):
-        resp = session.push_to_dcnm(self.get_url(), self.get_json())
+        resp = session.post(self.get_url(), self.get_json())
         return resp
 
     def delete(self, session):

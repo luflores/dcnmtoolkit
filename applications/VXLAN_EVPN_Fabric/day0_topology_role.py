@@ -12,14 +12,14 @@ def main(url=None, cert=None):
     session.login()
 
     topology = Topology.get(session)
-    node_list = topology.__getattribute__('attributes')['nodeList']
+    node_list = topology.__getattribute__('sw_attributes')['nodeList']
 
     for node in FABRIC:
         found_switch = filter(lambda attribute: attribute['displayName'] == node['switchName'], node_list)
         if found_switch:
             switch_id = found_switch[0]['id']
             url = '/fm/fmrest/topology/role/%s?newRole=%s' % (switch_id, node['role'])
-            resp = session.update_dcnm(url, None)
+            resp = session.put(url, None)
             logging.info('HTTP POST response %s' % resp)
             logging.debug('%s(%s)--role-->%s' % (node['switchName'], switch_id, node['role']))
 

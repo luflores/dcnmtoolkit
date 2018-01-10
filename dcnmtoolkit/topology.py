@@ -2,8 +2,7 @@
 
 class Topology(object):
     def __init__(self, attributes=None):
-        if attributes:
-            self.attributes = attributes
+        self.sw_attributes = attributes
 
     @classmethod
     def get(cls, session):

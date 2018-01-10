@@ -1,58 +1,36 @@
 import json
 
 
-class Server(object):
-    def __init__(self, attributes=None):
-        if attributes:
-            self.attributes = attributes
-        else:
-            self.attributes = dict()
-            self.attributes['userName'] = None
-            self.attributes['hostName'] = None
-            self.attributes['protocol'] = None
-            self.attributes['lastUpdateTime'] = None
-            self.attributes['url'] = None
-            self.attributes['path'] = None
-            self.attributes['serverName'] = None
-            self.attributes['password'] = None
-            self.attributes['id'] = None
-
-    @classmethod
-    def get(cls, session):
-        url = '/rest/poap/servers'
-        ret = session.get(url)
-        resp = []
-        for i in ret.json():
-            obj = cls(attributes=i)
-            resp.append(obj)
-        return resp
-
-
 class Switch(object):
     def __init__(self, attributes=None):
-        self.attributes = dict()
-        if attributes:
-            self.attributes = attributes
+        self.sw_attributes = attributes
+
+    @property
+    def attributes(self):
+        return self.sw_attributes
 
     @property
     def details(self):
-        details_keys = ['switchName', 'serialNumber', 'deviceType', 'mgmtIp',
-                        'username', 'password', 'lanGroup', 'systemImageName',
-                        'imageServerId', 'configServerId', 'publish']
-        return {key: self.attributes[key] for key in details_keys}
+        if self.sw_attributes:
+            details_keys = ['switchName', 'serialNumber', 'deviceType', 'mgmtIp',
+                            'username', 'password', 'lanGroup', 'systemImageName',
+                            'imageServerId', 'configServerId', 'publish']
+            return {key: self.sw_attributes[key] for key in details_keys}
+        else:
+            return self.sw_attributes
 
     @details.setter
     def details(self, attributes):
-        self.attributes = dict.fromkeys(['switchName', 'serialNumber', 'deviceType', 'mgmtIp', 'username', 'password',
-                                         'lanGroup', 'systemImageName', 'kickstartImageName', 'imageServerId',
-                                         'configServerId', 'publish'])
-        self.attributes['deviceType'] = 'N9k'
-        self.attributes['publish'] = 'true'
-        self.attributes['configServerId'] = 1
-        self.attributes['deviceType'] = 1
+        self.sw_attributes = dict.fromkeys(['switchName', 'serialNumber', 'deviceType', 'mgmtIp', 'username', 'password',
+                                            'lanGroup', 'systemImageName', 'kickstartImageName', 'imageServerId',
+                                            'configServerId', 'publish'])
+        self.sw_attributes['deviceType'] = 'N9k'
+        self.sw_attributes['publish'] = 'true'
+        self.sw_attributes['configServerId'] = 1
+        self.sw_attributes['imageServerId'] = 1
         for key, value in attributes.iteritems():
-            if key in self.attributes:
-                self.attributes[key] = value
+            if key in self.sw_attributes:
+                self.sw_attributes[key] = value
 
     @classmethod
     def get(cls, session):
@@ -66,31 +44,37 @@ class Switch(object):
 
 
 class Template(object):
-    def __init__(self, attributes=None):
-        self.attributes = dict()
-        if attributes:
-            self.attributes = attributes
+    def __init__(self, attributes=None, params=None, template_name=None):
+        self.template_name = template_name
+        if params:
+            self.params = (attributes, params)
+        else:
+            self.tmpl_attributes = attributes
+
+    @property
+    def attributes(self):
+        return self.tmpl_attributes
 
     @property
     def params(self):
-        if 'templateNVPairs' in self.attributes:
-            template_details = {key: self.attributes[key] for key in ['templateNVPairs', 'templateName']}
+        if self.tmpl_attributes and 'templateNVPairs' in self.tmpl_attributes:
+            template_details = {key: self.tmpl_attributes[key] for key in ['templateNVPairs', 'templateName']}
             template_params = json.loads(template_details.pop('templateNVPairs'))
             return template_params
         else:
-            return self.attributes
+            return self.tmpl_attributes
 
     @params.setter
     def params(self, val):
         try:
             attributes, params = val
         except ValueError:
-            raise ValueError("Pass an attributes, base_template")
+            raise ValueError("Pass an sw_attributes, base_template")
         else:
             for key, value in attributes.iteritems():
                 if key in params.keys():
                     params[key] = value
-            self.attributes = params
+            self.tmpl_attributes = params
 
     @classmethod
     def get(cls, session):
@@ -105,5 +89,18 @@ class Template(object):
 
 
 class POAPDefinition(Switch, Template):
-    pass
+        def __init__(self, attributes=None, params=None, template_name=None):
+            super(Switch, self).__init__()
+            super(Template, self).__init__()
+            self.details = attributes
+            self.params = (attributes, params)
+            self.template_name = template_name
+
+        @property
+        def definition(self):
+            poap_definition = {'switchDetails': [self.details],
+                                   'templateDetails': [{'templateName': self.template_name,
+                                                        'templateParams': self.params}]}
+            return poap_definition
+
 

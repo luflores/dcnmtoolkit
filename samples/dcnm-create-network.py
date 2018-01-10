@@ -19,14 +19,14 @@ def main():
     session.login()
 
     test = Org('sample-org')
-    session.push_to_dcnm(test.get_url(), test.get_json())
+    session.post(test.get_url(), test.get_json())
 
     p1 = Partition('sample', test)
-    session.push_to_dcnm(p1.get_url(), p1.get_json())
+    session.post(p1.get_url(), p1.get_json())
     n1 = Network('net1', p1)
     n1.segmentId = 333
     n1.vlanId = n1.segmentId
-    session.push_to_dcnm(n1.get_url(), n1.get_json())
+    session.post(n1.get_url(), n1.get_json())
 
 
 if __name__ == "__main__":
