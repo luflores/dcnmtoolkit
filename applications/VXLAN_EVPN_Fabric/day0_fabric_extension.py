@@ -12,8 +12,8 @@ def main(url=None, cert=None):
     session = Session(url, LOGIN, PASSWORD, logging_lvl='INFO', verify=cert)
     session.login()
 
-    # add_fab_ext(session)
-    del_fab_ext(session)
+    add_fab_ext(session)
+    # del_fab_ext(session)
 
 
 def add_fab_ext(session):
