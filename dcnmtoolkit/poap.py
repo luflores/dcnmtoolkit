@@ -99,8 +99,8 @@ class POAPDefinition(Switch, Template):
         @property
         def definition(self):
             poap_definition = {'switchDetails': [self.details],
-                                   'templateDetails': [{'templateName': self.template_name,
-                                                        'templateParams': self.params}]}
+                               'templateDetails': [{'templateName': self.template_name,
+                                                    'templateParams': self.params}]}
             return poap_definition
 
 

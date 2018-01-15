@@ -1,8 +1,7 @@
-from credentials import URL, CERT, LOGIN, PASSWORD
-from fabric_data import FABRIC
+from applications.VXLAN_EVPN_Fabric.credentials import URL, CERT, LOGIN, PASSWORD
+from applications.VXLAN_EVPN_Fabric.fabric_data import FABRIC
 from dcnmtoolkit import Session
 import logging
-import json
 
 logging.getLogger(__name__)
 

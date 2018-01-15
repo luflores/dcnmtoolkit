@@ -1,7 +1,7 @@
 import json
 from dcnmtoolkit import Session, Switch, LANFabric, Template
-from credentials import URL, CERT, LOGIN, PASSWORD
-from fabric_data import FABRIC
+from applications.VXLAN_EVPN_Fabric.credentials import URL, CERT, LOGIN, PASSWORD
+from applications.VXLAN_EVPN_Fabric.fabric_data import FABRIC
 
 
 def save_objs_details_to_file(objs, filename):

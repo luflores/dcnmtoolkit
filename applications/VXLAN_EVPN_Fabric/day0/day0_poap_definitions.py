@@ -1,8 +1,8 @@
-import json
-from credentials import URL, CERT, LOGIN, PASSWORD
-from fabric_data import FABRIC
+import applications.VXLAN_EVPN_Fabric.json
+from applications.VXLAN_EVPN_Fabric.credentials import URL, CERT, LOGIN, PASSWORD
+from applications.VXLAN_EVPN_Fabric.fabric_data import FABRIC
 from dcnmtoolkit import Session, POAPDefinition
-from templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, POAP_LEAF_DCI_TMPL
+from applications.VXLAN_EVPN_Fabric.templates.templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, POAP_LEAF_DCI_TMPL
 import logging
 
 logging.getLogger(__name__)
@@ -32,9 +32,8 @@ def main(url=None, cert=None):
 
         if params and template_name:
             poap = POAPDefinition(attributes=node, params=params, template_name=template_name)
-            resp = session.post(poap_url, json.dumps(poap.definition))
+            resp = session.post(poap_url, applications.VXLAN_EVPN_Fabric.json.dumps(poap.definition))
             logging.info('HTTP POST response %s' % resp)
-            # print json.dumps(poap.definition, indent=4)
 
 
 if __name__ == "__main__":
