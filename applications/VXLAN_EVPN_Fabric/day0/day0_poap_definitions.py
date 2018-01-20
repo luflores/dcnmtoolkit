@@ -2,7 +2,8 @@ import json
 from applications.VXLAN_EVPN_Fabric.credentials import URL, CERT, LOGIN, PASSWORD
 from applications.VXLAN_EVPN_Fabric.fabric_data import FABRIC
 from dcnmtoolkit import Session, POAPDefinition
-from applications.VXLAN_EVPN_Fabric.templates.templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, POAP_LEAF_DCI_TMPL
+from applications.VXLAN_EVPN_Fabric.templates.templates import POAP_LEAF_TMPL, POAP_SPINE_TMPL, POAP_SPINE_DCI_TMPL, \
+    POAP_LEAF_DCI_TMPL
 import logging
 
 logging.getLogger(__name__)
