@@ -6,10 +6,11 @@ dcnmtoolkit/autoconfig.py
 dcnmtoolkit/cableplan.py
 dcnmtoolkit/config.py
 dcnmtoolkit/dcnmsession.py
+dcnmtoolkit/lan_fabric.py
 dcnmtoolkit/poap.py
+dcnmtoolkit/topology.py
 dcnmtoolkit/vxlan.py
 dcnmtoolkit.egg-info/PKG-INFO
 dcnmtoolkit.egg-info/SOURCES.txt
 dcnmtoolkit.egg-info/dependency_links.txt
-dcnmtoolkit.egg-info/requires.txt
 dcnmtoolkit.egg-info/top_level.txt

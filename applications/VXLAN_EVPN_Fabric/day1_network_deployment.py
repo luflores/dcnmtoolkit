@@ -1,4 +1,4 @@
-from applications.VXLAN_EVPN_Fabric.credentials import URL, CERT, LOGIN, PASSWORD
+from credentials import URL, CERT, LOGIN, PASSWORD
 from dcnmtoolkit import Session
 import logging
 import json
