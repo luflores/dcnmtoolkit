@@ -41,6 +41,7 @@ def del_fab_ext(session):
                 fabric_ext[key] = value
         url = '/rest/top-down/fabrics/%s/vrf-extension' % fabric_ext['sourceFabric']
         resp = session.delete(url, json.dumps(fabric_ext))
+        # time.sleep(10)
         logging.info('HTTP POST response %s' % resp)
         print resp.content
 
@@ -50,6 +51,7 @@ def del_fab_ext(session):
                 fabric_ext[key] = value
         url = '/rest/top-down/fabrics/%s/vrf-extension' % fabric_ext['sourceFabric']
         resp = session.delete(url, json.dumps(fabric_ext))
+        # time.sleep(10)
         logging.info('HTTP POST response %s' % resp)
 
 
