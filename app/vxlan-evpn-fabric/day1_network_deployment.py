@@ -10,6 +10,8 @@ from collections import defaultdict
 logging.getLogger(__name__)
 '''
 
+TODO ******** Need to Make this a Class ***********
+
 FABRIC Example Dict Row
 
 P2PDCI_INTERFACES and SYSLOG_SERVER MOst be json.dumps and include as a string. And then the payload can be json.dumps
@@ -109,32 +111,35 @@ def build_vrf(session, _fabric, asn, vrf='OVERLAY1', l3vni=1):
     resp = session.post(url, json.dumps(overlay))
     if not resp.ok:
         print json.loads(resp.content)['localizedMessage']
-    logging.info('HTTP POST response %s' % resp)
+    logging.info('Received response: %s' % resp.status_code)
 
 
-def build_networks(session, _fabric, vrf, networks, bum, ipv4_base=u'1.0.0.1', ipv6_base=u'c5c0:1::1', suppress_arp=False):
+def build_networks(session, _fabric, vrf, networks, bum, ipv4_base=u'1.0.0.1', ipv4_mask='/22', ipv4_oct=65536,
+                   ipv6_base=u'c5c0:1::1', ipv6_mask='/64', ipv6_oct=10, suppress_arp=False, network_id_offset=0):
     networks = parse_range(networks)
     for network_id in networks:
+        vlan_id = network_id
+        network_id = network_id - network_id_offset
         network_params = {
             "fabric": _fabric,
             "networkExtensionTemplate": "Default_Network_Extension",
-            "networkId": "2" + format(network_id, '05d'),
-            "networkName": "Network" + str(network_id),
+            "networkId": "2" + format(vlan_id, '05d'),
+            "networkName": "Network" + str(vlan_id),
             "networkTemplate": "Default_Network",
             "networkTemplateConfig": {
                 "dhcpServerAddr1": "",
                 "enableIR": False,
-                "gatewayIpAddress": str(ipaddress.IPv4Address(ipv4_base) + 65536 * network_id) + '/22',
-                "gatewayIpV6Address": str(ipaddress.IPv6Address(ipv6_base) + int(math.pow(256, 10)) * network_id) + '/64',
+                "gatewayIpAddress": str(ipaddress.IPv4Address(ipv4_base) + ipv4_oct * network_id) + ipv4_mask,
+                "gatewayIpV6Address": str(ipaddress.IPv6Address(ipv6_base) + int(math.pow(256, ipv6_oct)) * network_id) + ipv6_mask,
                 "intfDescription": "",
                 "isLayer2Only": False,
                 "mcastGroup": bum,
                 "mtu": "",
-                "networkName": "Network" + str(network_id),
+                "networkName": "Network" + str(vlan_id),
                 "nveId": 1,
-                "segmentId": "2" + format(network_id, '05d'),
+                "segmentId": "2" + format(vlan_id, '05d'),
                 "suppressArp": suppress_arp,
-                "vlanId": network_id,
+                "vlanId": vlan_id,
                 "vrfDhcp": "",
                 "vrfName": vrf
             },
@@ -146,17 +151,17 @@ def build_networks(session, _fabric, vrf, networks, bum, ipv4_base=u'1.0.0.1', i
         resp = session.post(url, json.dumps(network_params))
         if not resp.ok:
             print json.loads(resp.content)['localizedMessage']
-        logging.info('HTTP POST response %s' % resp)
+        logging.info('Received response: %s' % resp.status_code)
 
 
-def attach_network(session, network, _fabric, _switches, vpc=False, deployment=True, extension_values=""):
+def attach_network(session, vlan, _fabric, _switches, vpc=False, deployment=True, extension_values=""):
     network_attach = []
     if not vpc:
         for switch in _switches:
             switch_base = {"fabric": _fabric,
-                           "networkName": "Network" + str(network),
+                           "networkName": "Network" + str(vlan),
                            "serialNumber": switch,
-                           "vlan": str(network),
+                           "vlan": str(vlan),
                            "dot1QVlan": 1,
                            "untagged": False,
                            "deployment": deployment,
@@ -164,16 +169,16 @@ def attach_network(session, network, _fabric, _switches, vpc=False, deployment=T
                            "detachSwitchPorts": "",
                            "extensionValues": extension_values
                            }
-            network_attach.append({"networkName": "Network" + str(network), "lanAttachList": [switch_base]})
+            network_attach.append({"networkName": "Network" + str(vlan), "lanAttachList": [switch_base]})
 
     if vpc:
         for vpc_domain, vpc_switches, in _switches.iteritems():
             lan_attach_list = []
             for vpc_switch in vpc_switches:
                 vpc_switch_base = {"fabric": _fabric,
-                                   "networkName": "Network" + str(network),
+                                   "networkName": "Network" + str(vlan),
                                    "serialNumber": vpc_switch,
-                                   "vlan": str(network),
+                                   "vlan": str(vlan),
                                    "dot1QVlan": 1,
                                    "untagged": False,
                                    "deployment": deployment,
@@ -182,14 +187,13 @@ def attach_network(session, network, _fabric, _switches, vpc=False, deployment=T
                                    "extensionValues": extension_values
                                    }
                 lan_attach_list.append(vpc_switch_base)
-            network_attach.append({"networkName": "Network" + str(network), "lanAttachList": lan_attach_list})
+            network_attach.append({"networkName": "Network" + str(vlan), "lanAttachList": lan_attach_list})
 
     url = '/rest/top-down/fabrics/%s/networks/attachments' % _fabric
     resp = session.post(url, json.dumps(network_attach))
     if not resp.ok:
         print json.loads(resp.content)['localizedMessage']
-    logging.info('HTTP POST response %s' % resp)
-    # print url
+    logging.info('Received response: %s' % resp.status_code)
     # print json.dumps(network_attach, indent=4, sort_keys=True)
 
 
@@ -198,7 +202,8 @@ def deploy_network(session, network, _fabric):
         resp = session.post(url, json.dumps({"networkNames": ("Network" + str(network))}))
         if not resp.ok:
             print json.loads(resp.content)['localizedMessage']
-        logging.info('HTTP POST response %s' % resp)
+        logging.info('Received response: %s' % resp.status_code)
+        # print "BOOM!! I Deployed Network %s" % network
 
 
 def get_vpc_switches(_fabric):
@@ -218,7 +223,7 @@ def get_border_gateways(_fabric):
     return _border_gateway
 
 
-def multi_site_attach_and_deploy(session, _fabric, networks, topology="all", deployment=True):
+def attach_and_deploy(session, _fabric, networks, topology="all", deployment=True):
     networks = parse_range(networks)
     border_gateway = get_border_gateways(_fabric)
     vpc_switches = get_vpc_switches(_fabric)
@@ -239,11 +244,26 @@ def main(url=None, cert=None):
     # build_vrf(session, "Fab2", 65502)
     # build_vrf(session, "Fab3", 65503)
     # build_vrf(session, "Fab4", 65504)
-    # build_networks(session, "Fab2", 'OVERLAY1', '101-300', "239.255.252.1")
-    # build_networks(session, "Fab3", 'OVERLAY1', '101-300', "239.255.253.1")
-    # build_networks(session, "Fab4", 'OVERLAY1', '101-300', "239.255.254.1")
-    # multi_site_attach_and_deploy(session, "Fab3", '201-250', topology='vpc', deployment=True)
-    # multi_site_attach_and_deploy(session, "Fab4", '251-300', topology='vpc', deployment=True)
+    # build_networks(session, "Fab2", 'OVERLAY1', '101-300', 101-300', "239.255.252.1")
+    # build_networks(session, "Fab3", 'OVERLAY1', '101-300', 101-300', "239.255.253.1")
+    # build_networks(session, "Fab4", 'OVERLAY1', '101-300', 101-300', "239.255.254.1")
+    attach_and_deploy(session, "Fab3", '101-132', topology='all', deployment=True)
+    attach_and_deploy(session, "Fab4", '101-132', topology='all', deployment=True)
+    attach_and_deploy(session, "Fab3", '133-250', topology='vpc', deployment=False)
+    attach_and_deploy(session, "Fab4", '251-300', topology='vpc', deployment=False)
+
+    # build_networks(session, "Fab3", 'OVERLAY1', '3000-3002', "239.255.253.1",
+    #                ipv4_base=u'1.1.0.1', ipv4_mask='/25', ipv4_oct=256,
+    #                ipv6_base=u'fdc5:1f55:71a7:0::1', ipv6_mask='/64', ipv6_oct=8,
+    #                network_id_offset=3000)
+    #
+    # build_networks(session, "Fab4", 'OVERLAY1', '3500-3502', "239.255.253.1",
+    #                ipv4_base=u'1.1.0.1', ipv4_mask='/25', ipv4_oct=256,
+    #                ipv6_base=u'fdc5:1f55:71a7:0::1', ipv6_mask='/64', ipv6_oct=8,
+    #                network_id_offset=3500)
+    #
+    # attach_and_deploy(session, "Fab3", '3000-3002', topology='vpc', deployment=True)
+
 
 
 if __name__ == "__main__":

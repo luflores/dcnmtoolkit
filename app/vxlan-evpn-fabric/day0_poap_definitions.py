@@ -19,22 +19,22 @@ def main(url=None, cert=None):
 
     for node in FABRIC:
         if node['tier'] is 'Spine':
-            template_name = 'IPFabric_N9K_Spine_10_2_1_ST_1_TAG'
+            template_name = 'LF_Spine'
             params = POAP_SPINE_TMPL['templateDetails'][0]['templateParams']
         elif node['tier'] is 'DatacenterCore':
-            template_name = 'IPFabric_N9K_Spine_10_2_1_ST_1_TAG_DCI'
+            template_name = 'LF_DCCore'
             params = POAP_SPINE_DCI_TMPL['templateDetails'][0]['templateParams']
         elif node['tier'] is 'BorderGateway':
-            template_name = 'IPFabric_N9K_Leaf_10_2_1_ST_1_TAG_DCI'
+            template_name = 'LF_BorderGateway'
             params = POAP_LEAF_DCI_TMPL['templateDetails'][0]['templateParams']
         elif node['tier'] is 'Leaf' or node['tier'] is 'BorderLeaf':
-            template_name = 'IPFabric_N9K_Leaf_10_2_1_ST_1_TAG'
+            template_name = 'LF_Leaf'
             params = POAP_LEAF_TMPL['templateDetails'][0]['templateParams']
 
         if params and template_name:
             poap = POAPDefinition(attributes=node, params=params, template_name=template_name)
-            resp = session.post(poap_url, json.dumps(poap.definition))
-            logging.info('HTTP POST response %s' % resp)
+            # print json.dumps(poap.definition, indent=4)
+            session.post(poap_url, json.dumps(poap.definition))
 
 
 if __name__ == "__main__":

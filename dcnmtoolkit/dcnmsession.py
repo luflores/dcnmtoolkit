@@ -1,7 +1,6 @@
 import requests
 import json
 import logging
-import urllib3
 from autoconfig import AutoConfigSettings
 
 logging.getLogger(__name__)
@@ -45,20 +44,29 @@ class Session(object):
     def post(self, url, data):
         url = self.base_url + url
         resp = requests.post(url, headers=self.headers, data=data, verify=self.verify)
-        if not resp.ok:
-            logging.info('Posting %s to %s' % (data, url))
+        if resp.ok:
+            logging.info('Received response: %s' % resp.status_code)
+            logging.debug('Got %s. Received response: %s' % (url, resp.text))
+        else:
+            logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp
 
     def put(self, url, data):
         url = self.base_url + url
         resp = requests.put(url, headers=self.headers, data=data, verify=self.verify)
+        if resp.ok:
+            logging.info('Received response: %s' % resp.status_code)
+            logging.debug('Got %s. Received response: %s' % (url, resp.text))
+        else:
+            logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp
 
     def get(self, url):
         url = self.base_url + url
         resp = requests.get(url, headers=self.headers, verify=self.verify)
         if resp.ok:
-            logging.info('Got %s. Received response: %s' % (url, resp.text))
+            logging.info('Received response: %s' % resp.status_code)
+            logging.debug('Got %s. Received response: %s' % (url, resp.text))
         else:
             logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp
@@ -67,7 +75,8 @@ class Session(object):
         url = self.base_url + url
         resp = requests.delete(url, headers=self.headers, data=data, verify=self.verify)
         if resp.ok:
-            logging.info('Got %s. Received response: %s' % (url, resp.text))
+            logging.info('%s. Received response: %s' % (url, resp.status_code))
+            logging.debug('Got %s. Received response: %s' % (url, resp.text))
         else:
             logging.error('Cloud not get %s. Received response: %s', url, resp.text)
         return resp

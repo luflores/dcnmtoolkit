@@ -19,10 +19,8 @@ def main(url=None, cert=None):
         if found_switch:
             switch_id = found_switch[0]['id']
             url = '/fm/fmrest/topology/role/%s?newRole=%s' % (switch_id, node['role'])
-            resp = session.put(url, None)
-            logging.info('HTTP POST response %s' % resp)
-            logging.debug('%s(%s)--role-->%s' % (node['switchName'], switch_id, node['role']))
+            session.put(url, None)
 
 
 if __name__ == "__main__":
-    main(url=URL['url1'], cert=CERT['cert1'])
+    main(url=URL['url1'], cert='./dcnm_cert.pem')

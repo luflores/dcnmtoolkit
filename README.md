@@ -24,8 +24,6 @@ If you have git installed, clone the repository
 
     git clone https://github.com/luflores/dcnmtoolkit.git
 
-
-
 ## Installing
 
 After downloading, install using setuptools.
@@ -42,5 +40,16 @@ Alternatively you can install directly via pip
 
     pip install dcnmtoolkit
 
-
 ack
+## Docker
+    docker build --rm -t alpine-dcnmtoolkit .
+    docker run -t -i -v ${PWD}/app:/app  --hostname dcnmtoolkit --name dcnmtoolkit -d alpine-dcnmtoolkit
+
+##Clean UP
+    docker kill $(docker ps -q)
+    docker rm $(docker ps -a -q)
+    docker rmi $(docker images -q)
+
+
+
+

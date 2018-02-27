@@ -15,3 +15,5 @@ fabric_data.py
 *.csv
 *.json
 private
+dcnmtoolkit.egg-info
+dcnm_cert.pem
