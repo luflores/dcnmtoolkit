@@ -52,3 +52,6 @@ def del_fab_ext(session):
 
 if __name__ == "__main__":
     main(url=URL['url1'], cert=CERT['cert1'])
+
+
+'''s[s.find("(")+1:s.find(")")]'''

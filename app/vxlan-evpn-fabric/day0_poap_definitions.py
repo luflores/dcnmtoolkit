@@ -11,6 +11,7 @@ logging.getLogger(__name__)
 
 def main(url=None, cert=None):
     """My Main"""
+    update = False
     poap_url = '/rest/poap/definitions'
     template_name = None
     params = None
@@ -34,7 +35,10 @@ def main(url=None, cert=None):
         if params and template_name:
             poap = POAPDefinition(attributes=node, params=params, template_name=template_name)
             # print json.dumps(poap.definition, indent=4)
-            session.post(poap_url, json.dumps(poap.definition))
+            if update:
+                session.put(poap_url, json.dumps(poap.definition))
+            else:
+                session.post(poap_url, json.dumps(poap.definition))
 
 
 if __name__ == "__main__":

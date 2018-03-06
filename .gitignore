@@ -14,6 +14,7 @@ credentials.py
 fabric_data.py
 *.csv
 *.json
+*.pem
 private
 dcnmtoolkit.egg-info
 dcnm_cert.pem

@@ -249,8 +249,8 @@ def main(url=None, cert=None):
     # build_networks(session, "Fab4", 'OVERLAY1', '101-300', 101-300', "239.255.254.1")
     attach_and_deploy(session, "Fab3", '101-132', topology='all', deployment=True)
     attach_and_deploy(session, "Fab4", '101-132', topology='all', deployment=True)
-    attach_and_deploy(session, "Fab3", '133-250', topology='vpc', deployment=False)
-    attach_and_deploy(session, "Fab4", '251-300', topology='vpc', deployment=False)
+    attach_and_deploy(session, "Fab3", '133-250', topology='vpc', deployment=True)
+    attach_and_deploy(session, "Fab4", '251-300', topology='vpc', deployment=True)
 
     # build_networks(session, "Fab3", 'OVERLAY1', '3000-3002', "239.255.253.1",
     #                ipv4_base=u'1.1.0.1', ipv4_mask='/25', ipv4_oct=256,
@@ -263,7 +263,6 @@ def main(url=None, cert=None):
     #                network_id_offset=3500)
     #
     # attach_and_deploy(session, "Fab3", '3000-3002', topology='vpc', deployment=True)
-
 
 
 if __name__ == "__main__":

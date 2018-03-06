@@ -3,7 +3,7 @@ FROM alpine
 RUN   apk update \
       && apk add --no-cache openssl git python2 bash py2-pip openssl \
       && git clone https://github.com/luflores/dcnmtoolkit.git \
-      && echo 'PS1="\\h:\\w]#"' >> /root/.bashrc \
+      && echo 'PS1="\\h:\\w]#"' >> /root/.bashrc
 
 WORKDIR /dcnmtoolkit
 RUN python setup.py install
